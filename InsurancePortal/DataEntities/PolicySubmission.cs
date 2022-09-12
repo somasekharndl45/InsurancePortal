@@ -11,7 +11,8 @@ namespace InsurancePortal.DataEntities
         public decimal? PremiumAmount { get; set; }
         public DateTime? PolicyEffectiveDate { get; set; }
         public int? MemberId { get; set; }
+        public string? Remark { get; set; }
 
-        public virtual MemberRegistration? Member { get; set; }
+        //public virtual MemberRegistration? Member { get; set; }
     }
 }

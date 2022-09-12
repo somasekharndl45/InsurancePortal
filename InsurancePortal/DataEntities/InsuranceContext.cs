@@ -90,10 +90,14 @@ namespace InsurancePortal.DataEntities
 
                 entity.Property(e => e.PremiumAmount).HasColumnType("decimal(18, 0)");
 
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.PolicySubmissions)
-                    .HasForeignKey(d => d.MemberId)
-                    .HasConstraintName("FK__PolicySub__Membe__36B12243");
+                entity.Property(e => e.Remark)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                //entity.HasOne(d => d.Member)
+                //    .WithMany(p => p.PolicySubmissions)
+                //    .HasForeignKey(d => d.MemberId)
+                //    .HasConstraintName("FK__PolicySub__Membe__36B12243");
             });
 
             modelBuilder.Entity<UserRegistration>(entity =>

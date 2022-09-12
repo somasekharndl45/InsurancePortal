@@ -84,26 +84,70 @@ namespace InsurancePortal.Services
             return dbContext.MemberRegistrations.ToList().Where(x => (x.MemberId == memberDetails.MemberId) || x.UserName == memberDetails.UserName).ToList();
         }
 
-        public object GetById(int memberId)
+        public object GetById(int memberId,string firstname,string lastname)
         {
-            var result = dbContext.MemberRegistrations.Where(m => m.MemberId == memberId).FirstOrDefault();
-            var entity = from m in dbContext.MemberRegistrations
-                         join p in dbContext.PolicySubmissions
-                         on m.MemberId equals p.MemberId into ab
-                         from t in ab.DefaultIfEmpty()
-                         where m.MemberId == memberId
-                         select new
-                         {
-                             memberId = m.MemberId,
-                             PolicyId = t.PolicyId == null ? 0 : (t.PolicyId),
-                             UserName = m.UserName,
-                             FirstName = m.FirstName,
-                             LastName = m.LastName,
-                             policyStatus = (t.PolicyStatus == null || t.PolicyStatus == "") ? "" : t.PolicyStatus,
-                             policyType = t.PolicyType,
-                             premiumAmount = t.PremiumAmount
-                         };
-            return entity;
+            try
+            {
+                var result = dbContext.MemberRegistrations.Where(m => m.MemberId == memberId).FirstOrDefault();
+                var entity = from m in dbContext.MemberRegistrations
+                             join p in dbContext.PolicySubmissions
+                             on m.MemberId equals p.MemberId into ab
+                             from t in ab.DefaultIfEmpty()
+                             where m.MemberId == memberId ||
+                            (m.FirstName == firstname &&
+                             m.LastName == lastname) 
+                            
+
+                             select new
+                             {
+                                 memberId = m.MemberId,
+                                 PolicyId = t.PolicyId == null ? 0 : (t.PolicyId),
+                                 UserName = m.UserName,
+                                 FirstName = m.FirstName,
+                                 LastName = m.LastName,
+                                 policyStatus = (t.PolicyStatus == null || t.PolicyStatus == "") ? "No Policy Found" : t.PolicyStatus,
+                                 policyType = t.PolicyType,
+                                 premiumAmount = t.PremiumAmount
+                             };
+                if (entity.Count() > 0 )
+                { 
+                    return entity; 
+                }
+                   
+                else
+                {
+                    return "No user found";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+           
+        }
+
+        public string CreatePolicy(PolicySubmission policySubmission)
+        {
+            try
+            {
+
+                PolicySubmission policy = new PolicySubmission();
+                policy.PolicyStatus = policySubmission.PolicyStatus;
+                policy.PolicyType = policySubmission.PolicyType;
+                policy.PolicyEffectiveDate = policySubmission.PolicyEffectiveDate;
+                policy.PremiumAmount = policySubmission.PremiumAmount;
+                policy.MemberId = policySubmission.MemberId;
+                policy.Remark = policySubmission.Remark;
+
+                    dbContext.PolicySubmissions.Add(policySubmission);
+                    dbContext.SaveChanges();
+                    return "PolicySubmission succesfull";
+            }
+            catch (Exception ex)
+            {
+                return ex.InnerException.Message; 
+            }
         }
     }   
  }

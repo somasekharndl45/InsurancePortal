@@ -5,10 +5,7 @@ namespace InsurancePortal.DataEntities
 {
     public partial class MemberRegistration
     {
-        public MemberRegistration()
-        {
-            PolicySubmissions = new HashSet<PolicySubmission>();
-        }
+        
 
         public int MemberId { get; set; }
         public string? FirstName { get; set; }
@@ -19,6 +16,6 @@ namespace InsurancePortal.DataEntities
         public string? State { get; set; }
         public string? Email { get; set; }
 
-        public virtual ICollection<PolicySubmission> PolicySubmissions { get; set; }
+        
     }
 }
