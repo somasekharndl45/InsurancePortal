@@ -65,13 +65,13 @@ namespace InsurancePortal.Controllers
             });
         }
         [HttpGet("GetById")]
-        public ActionResult<List<object>> SearchUser(string? memberId, string? firstname, string? lastname)
+        public ActionResult<List<object>> SearchUser(string? memberId, string? firstname, string? lastname, string? policystatus, int policyid)
         {
             string result = string.Empty;
             try
             {
                 List<object> list = new List<object>();
-                object mr = _memberService.GetById(Convert.ToInt32(memberId), firstname, lastname);
+                object mr = _memberService.GetById(Convert.ToInt32(memberId), firstname, lastname, policystatus, policyid);
                 list.Add(mr);
                 if (mr != null)
                     return Ok(list);
@@ -103,6 +103,25 @@ namespace InsurancePortal.Controllers
                 Result = result
             });
         }
+
+        [HttpPut]
+        public ActionResult<string> EditPolicy([FromBody] PolicySubmission policySubmission)
+        {
+            try
+            {
+                 result = _memberService.UpdatePolicy(policySubmission);
+                //return Ok(result.ToList());
+            }
+            catch (Exception ex)
+            {
+                result =  ex.Message;
+            }
+            return Ok(new
+            {
+                Result = result.ToString()
+            }); ; 
+        }
+
     }
-    }
+}
 

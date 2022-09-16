@@ -11,7 +11,8 @@ namespace InsurancePortal.Services
         string UserLogin(Credentials credentials);
         string MemberRegistrations(MemberRegistration memberRegistration);
         List<MemberRegistration> Menbersearch(MemberDetails memberDetails);
-        object GetById(int memberId, string firstname, string lastname);
+        object GetById(int memberId, string firstname, string lastname, string policystatus, int policyid);
         string CreatePolicy(PolicySubmission policySubmission);
+        string UpdatePolicy(PolicySubmission policySubmission);
     }
 }

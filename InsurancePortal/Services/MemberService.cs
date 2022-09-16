@@ -15,19 +15,19 @@ namespace InsurancePortal.Services
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(userRegistration.UserName) && !string.IsNullOrWhiteSpace(userRegistration.Password)
-                   && !string.IsNullOrWhiteSpace(userRegistration.UserRole))
+                if (dbContext.UserRegistrations.Where(x => x.UserName == userRegistration.UserName).Count() > 0)
                 {
-                    UserRegistration register = new UserRegistration();
-                    register.UserName = userRegistration.UserName;
-                    register.Password = userRegistration.Password;
-                    register.UserRole = userRegistration.UserRole;
-
-                    dbContext.UserRegistrations.Add(register);
-                    dbContext.SaveChanges();
-                    return "Registration succesfull";
+                    return "UserName already exists";
                 }
-                return "Enter Valid data";
+
+                UserRegistration register = new UserRegistration();
+                register.UserName = userRegistration.UserName;
+                register.Password = userRegistration.Password;
+                register.UserRole = userRegistration.UserRole;
+
+                dbContext.UserRegistrations.Add(register);
+                dbContext.SaveChanges();
+                return "Registration Succesfull";
             }
             catch (Exception)
             {
@@ -84,10 +84,14 @@ namespace InsurancePortal.Services
             return dbContext.MemberRegistrations.ToList().Where(x => (x.MemberId == memberDetails.MemberId) || x.UserName == memberDetails.UserName).ToList();
         }
 
-        public object GetById(int memberId,string firstname,string lastname)
+        public object GetById(int memberId,string firstname,string lastname, string policystatus,int policyid)
         {
             try
             {
+                if(policystatus == "" || policystatus == null)
+                {
+                    policystatus = "qwerty";
+                }
                 var result = dbContext.MemberRegistrations.Where(m => m.MemberId == memberId).FirstOrDefault();
                 var entity = from m in dbContext.MemberRegistrations
                              join p in dbContext.PolicySubmissions
@@ -95,8 +99,9 @@ namespace InsurancePortal.Services
                              from t in ab.DefaultIfEmpty()
                              where m.MemberId == memberId ||
                             (m.FirstName == firstname &&
-                             m.LastName == lastname) 
-                            
+                             m.LastName == lastname) ||
+                            t.PolicyStatus == policystatus ||
+                            t.PolicyId == policyid
 
                              select new
                              {
@@ -107,7 +112,11 @@ namespace InsurancePortal.Services
                                  LastName = m.LastName,
                                  policyStatus = (t.PolicyStatus == null || t.PolicyStatus == "") ? "No Policy Found" : t.PolicyStatus,
                                  policyType = t.PolicyType,
-                                 premiumAmount = t.PremiumAmount
+                                 premiumAmount = t.PremiumAmount,
+                                 PolicyEffectiveDate = DateTime.Now.ToString("yyyy/MM/dd")
+                                 //t.PolicyEffectiveDate == null ? DateTime.Now.ToString("yyyy/MM/dd") : t.PolicyEffectiveDate.ToString("yyyy/MM/dd")
+
+                                 //PolicyEffectiveDate = t.PolicyEffectiveDate == null ? DateTime.Now.ToString("yyyy/MM/dd") : t.PolicyEffectiveDate.ToString("yyyy/MM/dd");
                              };
                 if (entity.Count() > 0 )
                 { 
@@ -131,7 +140,10 @@ namespace InsurancePortal.Services
         {
             try
             {
-
+                if (dbContext.PolicySubmissions.Where(x => x.PolicyType == policySubmission.PolicyType && x.MemberId == policySubmission.MemberId).Count() > 0)
+                {
+                    return $"Policy already exists with memberId  {policySubmission.MemberId}";
+                }
                 PolicySubmission policy = new PolicySubmission();
                 policy.PolicyStatus = policySubmission.PolicyStatus;
                 policy.PolicyType = policySubmission.PolicyType;
@@ -142,12 +154,41 @@ namespace InsurancePortal.Services
 
                     dbContext.PolicySubmissions.Add(policySubmission);
                     dbContext.SaveChanges();
-                    return "PolicySubmission succesfull";
+                return $"Policy is added succesfully for {policySubmission.PolicyId}";
             }
             catch (Exception ex)
             {
                 return ex.InnerException.Message; 
             }
+        }
+
+        public string UpdatePolicy(PolicySubmission policySubmission)
+        {
+            try
+            {
+                var result = dbContext.PolicySubmissions.Where(x => x.MemberId == policySubmission.MemberId).FirstOrDefault();
+                string message = string.Empty;
+                if (result != null)
+                {
+                    result.PolicyStatus = policySubmission.PolicyStatus;
+                    result.PolicyType = policySubmission.PolicyType;
+                    result.PremiumAmount = policySubmission.PremiumAmount;
+                    result.PolicyEffectiveDate = policySubmission.PolicyEffectiveDate;
+                    result.Remark = policySubmission.Remark;
+                    dbContext.PolicySubmissions.Update(result);
+                    dbContext.SaveChanges();
+                    return $"Policy is Updated succesfully for {result.PolicyId}";
+                }
+                else
+                {
+                    return "InValid input";
+                }
+            }
+            catch(Exception ex)
+            {
+                return "Error occurred in Update";
+            }
+            
         }
     }   
  }

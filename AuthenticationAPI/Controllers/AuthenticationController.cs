@@ -29,6 +29,7 @@ namespace AuthenticationAPI.Controllers
             {
                 IEnumerable<string> audience = new[]
                         {
+                     _configuration["Jwt:ApiGatewayAudience"],
                         _configuration["Jwt:InsuranceAudience"],
                         };
                 bool isValidUser = ValidateUserCredentials(userCredential.UserName, userCredential.Password);

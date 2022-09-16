@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InsurancePortal", "InsurancePortal\InsurancePortal.csproj", "{055A224E-BCF8-4790-9DE1-E5D3CD83799A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationAPI", "AuthenticationAPI\AuthenticationAPI.csproj", "{5C4B9378-1EAF-4279-890D-1EB28D43ED4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationAPI", "AuthenticationAPI\AuthenticationAPI.csproj", "{5C4B9378-1EAF-4279-890D-1EB28D43ED4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{80671ACE-41A8-42F1-9198-DEA743A9A1A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5C4B9378-1EAF-4279-890D-1EB28D43ED4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C4B9378-1EAF-4279-890D-1EB28D43ED4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C4B9378-1EAF-4279-890D-1EB28D43ED4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80671ACE-41A8-42F1-9198-DEA743A9A1A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80671ACE-41A8-42F1-9198-DEA743A9A1A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80671ACE-41A8-42F1-9198-DEA743A9A1A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80671ACE-41A8-42F1-9198-DEA743A9A1A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
